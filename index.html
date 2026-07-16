@@ -1,94 +1,320 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Suana Mešić — Backend Developer</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
-  <style>
-    :root {
-      --text: #2A2024;
-      --main: #6E2A46;
-      --accent: #B04A67;
-      --bg: #FDF7F8;
-      --muted: #8A7580;
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Suana Mešić — Backend Developer</title>
+<meta name="description" content="Junior backend developer. I turn messy requirements into clean, reliable backend code.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+  /* ---- identity kit: the only colours and fonts on this page ---- */
+  :root {
+    --text:   #2A2024;
+    --main:   #6E2A46;
+    --accent: #B04A67;
+    --bg:     #FDF7F8;
+    --muted:  #8A7580;
+    --line:   #EDDDE2;
+    --panel:  #FFFFFF;
+
+    --measure: 34rem;   /* comfortable reading width */
+    --page:    64rem;   /* max page width */
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', system-ui, sans-serif;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ---- type scale ---- */
+  h1, h2, h3 { font-family: 'Fraunces', Georgia, serif; line-height: 1.15; letter-spacing: -0.02em; }
+  h1 { font-size: clamp(2rem, 5vw, 3.25rem); font-weight: 600; }
+  h2 { font-size: clamp(1.6rem, 3.5vw, 2.25rem); font-weight: 600; }
+  h3 { font-size: 1.1rem; font-weight: 600; }
+
+  p { max-width: var(--measure); }
+
+  a { color: var(--accent); }
+
+  /* An eyebrow labels the section. Small on purpose — it's a label, not a headline. */
+  .eyebrow {
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 0.75rem;
+  }
+
+  /* ---- layout ---- */
+  .wrap { max-width: var(--page); margin: 0 auto; padding: 0 1.5rem; }
+  section { padding: 5rem 0; border-top: 1px solid var(--line); }
+  section:first-of-type { border-top: 0; }
+
+  /* ---- nav ---- */
+  nav {
+    position: sticky; top: 0; z-index: 10;
+    background: rgba(253, 247, 248, 0.9);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--line);
+  }
+  .nav-inner {
+    max-width: var(--page); margin: 0 auto; padding: 1rem 1.5rem;
+    display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+  }
+  .wordmark {
+    font-family: 'Fraunces', Georgia, serif;
+    font-size: 1.25rem; font-weight: 700;
+    color: var(--text); text-decoration: none;
+  }
+  .wordmark span { color: var(--main); }
+
+  .nav-links { display: flex; gap: 1.25rem; align-items: center; font-size: 0.9rem; }
+  .nav-links a { color: var(--text); text-decoration: none; }
+  .nav-links a:hover { color: var(--accent); }
+
+  /* ---- buttons ---- */
+  .btn {
+    display: inline-block;
+    background: var(--main); color: #fff;
+    padding: 0.6rem 1.1rem; border-radius: 6px;
+    font-size: 0.9rem; font-weight: 500; text-decoration: none;
+    transition: background 0.15s ease;
+  }
+  .btn:hover { background: var(--accent); }
+
+  .btn-quiet {
+    display: inline-block;
+    color: var(--accent); text-decoration: none;
+    font-weight: 500; border-bottom: 1px solid var(--accent);
+    padding-bottom: 2px;
+  }
+
+  /* ---- hero ---- */
+  #hero { padding: 6rem 0 5rem; }
+  #hero h1 { max-width: 22ch; }
+  .hero-sub { margin-top: 1.25rem; font-size: 1.05rem; color: var(--muted); }
+  .hero-cta { margin-top: 2rem; }
+
+  /* ---- case study ---- */
+  .case-lead { margin-top: 0.75rem; font-size: 1.05rem; }
+
+  /* The three beats are a real sequence: what broke, what I did, what changed. */
+  .beats { margin: 2.5rem 0; display: grid; gap: 1.5rem; }
+  @media (min-width: 48rem) { .beats { grid-template-columns: repeat(3, 1fr); } }
+
+  .beat { border-left: 2px solid var(--line); padding-left: 1.25rem; }
+  .beat:nth-child(2) { border-left-color: var(--accent); }
+  .beat h3 { margin-bottom: 0.5rem; }
+  .beat p { font-size: 0.95rem; max-width: none; }
+
+  figure { margin: 2.5rem 0; }
+  figure img {
+    display: block; width: 100%; height: auto;
+    border-radius: 8px; border: 1px solid var(--line);
+  }
+  figcaption { margin-top: 0.6rem; font-size: 0.85rem; color: var(--muted); max-width: var(--measure); }
+
+  .stack {
+    display: flex; flex-wrap: wrap; gap: 0.5rem;
+    margin: 1.5rem 0; list-style: none;
+  }
+  .stack li {
+    font-size: 0.8rem; color: var(--main);
+    border: 1px solid var(--line); background: var(--panel);
+    padding: 0.25rem 0.6rem; border-radius: 999px;
+  }
+
+  /* ---- about ---- */
+  .about-grid { display: grid; gap: 2rem; align-items: start; }
+  @media (min-width: 48rem) { .about-grid { grid-template-columns: 200px 1fr; } }
+  .about-grid img { width: 100%; border-radius: 8px; display: block; }
+  .about-text p { margin-top: 1rem; }
+
+  .skills { margin-top: 1.5rem; display: grid; gap: 0.75rem; font-size: 0.95rem; }
+  .skills strong { color: var(--main); }
+
+  /* ---- contact ---- */
+  .contact-lead { margin-top: 1rem; }
+  .links { margin: 1.5rem 0 2rem; display: grid; gap: 0.5rem; font-size: 0.95rem; }
+
+  footer { padding: 2.5rem 0; border-top: 1px solid var(--line); font-size: 0.85rem; color: var(--muted); }
+
+  /* ---- accessibility floor ---- */
+  a:focus-visible {
+    outline: 2px solid var(--main); outline-offset: 3px; border-radius: 3px;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    #hero > .wrap > * { animation: rise 0.6s ease-out both; }
+    @keyframes rise {
+      from { opacity: 0; transform: translateY(10px); }
+      to   { opacity: 1; transform: none; }
     }
-
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-
-    html { -webkit-text-size-adjust: 100%; }
-
-    body {
-      background: var(--bg);
-      color: var(--text);
-      font-family: 'Inter', system-ui, sans-serif;
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 2rem;
-      line-height: 1.5;
-    }
-
-    main {
-      max-width: 40rem;
-      text-align: center;
-    }
-
-    .wordmark {
-      font-family: 'Fraunces', Georgia, serif;
-      font-weight: 700;
-      font-size: clamp(2.75rem, 9vw, 5rem);
-      letter-spacing: -0.02em;
-      color: var(--text);
-      line-height: 1.05;
-    }
-
-    .wordmark .dot { color: var(--main); }
-
-    .claim {
-      margin-top: 1.25rem;
-      font-size: clamp(1rem, 3.5vw, 1.35rem);
-      color: var(--text);
-      font-weight: 400;
-    }
-
-    .sub {
-      margin-top: 0.75rem;
-      font-size: clamp(0.85rem, 2.8vw, 1rem);
-      color: var(--muted);
-      letter-spacing: 0.01em;
-    }
-
-    .soon {
-      margin-top: 2.5rem;
-      display: inline-block;
-      font-size: 0.8rem;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: var(--accent);
-      border: 1px solid var(--accent);
-      border-radius: 999px;
-      padding: 0.4rem 1rem;
-    }
-
-    @media (prefers-reduced-motion: no-preference) {
-      main { animation: rise 0.7s ease-out; }
-      @keyframes rise {
-        from { opacity: 0; transform: translateY(12px); }
-        to   { opacity: 1; transform: translateY(0); }
-      }
-    }
-  </style>
+  }
+</style>
 </head>
 <body>
-  <main>
-    <h1 class="wordmark">Suana<span class="dot">.</span></h1>
-    <p class="claim">I turn messy requirements into clean, reliable backend code.</p>
-    <p class="sub">Junior Backend Developer · Databases · Clean Architecture</p>
-    <span class="soon">Portfolio coming soon</span>
-  </main>
+
+<nav>
+  <div class="nav-inner">
+    <a class="wordmark" href="#hero">Suana<span>.</span></a>
+    <div class="nav-links">
+      <a href="#work">Work</a>
+      <a href="#about">About</a>
+      <a href="#contact">Contact</a>
+      <a class="btn" href="https://github.com/suana-mesic">GitHub →</a>
+    </div>
+  </div>
+</nav>
+
+<main>
+
+  <!-- ================= HERO ================= -->
+  <section id="hero">
+    <div class="wrap">
+      <h1>I turn messy requirements into clean, reliable backend code.</h1>
+      <p class="hero-sub">
+        Third-year IT student and junior backend developer, working in C#, ASP.NET Core
+        and SQL. Most interested in database design and systems that stay correct when
+        something fails.
+      </p>
+      <p class="hero-cta">
+        <a class="btn" href="https://github.com/suana-mesic">View my code on GitHub →</a>
+      </p>
+    </div>
+  </section>
+
+  <!-- ================= WORK ================= -->
+  <section id="work">
+    <div class="wrap">
+      <p class="eyebrow">Selected work</p>
+      <h2>BookVerse</h2>
+      <p class="case-lead">
+        A full e-commerce backend in C#, built with Clean Architecture. The part worth
+        talking about is what happens after a customer pays.
+      </p>
+
+      <ul class="stack">
+        <li>C#</li>
+        <li>ASP.NET Core</li>
+        <li>Clean Architecture</li>
+        <li>SQL Server</li>
+        <li>SignalR</li>
+      </ul>
+
+      <div class="beats">
+        <div class="beat">
+          <h3>The problem</h3>
+          <p>
+            Staff had to be notified when an order was paid. The obvious place to send that
+            notification was inside the payment transaction — which meant a notification
+            failure could roll back a payment that had already succeeded.
+          </p>
+        </div>
+        <div class="beat">
+          <h3>What I did</h3>
+          <p>
+            I moved the notification out of the transaction. The paid order goes into an
+            outbox queue inside the payment transaction, and a background service drains that
+            queue separately and pushes notifications over SignalR.
+          </p>
+        </div>
+        <div class="beat">
+          <h3>The result</h3>
+          <p>
+            A failed notification is logged and skipped. The payment stays committed, and one
+            bad send never stops the rest. The two failures are now independent.
+          </p>
+        </div>
+      </div>
+
+      <figure>
+        <img src="bookverse-code.png" alt="The PaidOrderNotificationBackgroundService class in C#, showing the queue loop and per-notification error handling.">
+        <figcaption>
+          The background service that drains the queue. The try/catch sits inside the loop on
+          purpose — one failed notification must not stop the others.
+        </figcaption>
+      </figure>
+
+      <figure>
+        <img src="bookverse-architecture.png" alt="Clean Architecture diagram: Domain at the centre, then Application, Infrastructure and the API layer, with dependencies pointing inward.">
+        <figcaption>
+          The layering. Dependencies point inward, so the Domain depends on nothing — which is
+          what let the notification move out of the payment path without touching the order logic.
+        </figcaption>
+      </figure>
+
+      <p><a class="btn-quiet" href="https://github.com/suana-mesic/BookVerse">See the full BookVerse repo →</a></p>
+    </div>
+  </section>
+
+  <!-- ================= ABOUT ================= -->
+  <section id="about">
+    <div class="wrap">
+      <p class="eyebrow">About</p>
+      <div class="about-grid">
+        <img src="suana.jpg" alt="Suana Mešić">
+        <div class="about-text">
+          <h2>Suana Mešić</h2>
+          <p>
+            I'm a third-year student at the Faculty of Information Technologies in Mostar, and
+            I've been tutoring databases, statistics and data structures at the faculty since
+            2024 — which is where I learned that if you can't explain a design simply, you
+            probably don't understand it yet.
+          </p>
+          <p>
+            What I like about backend work is that it's checkable. A payment either stays
+            committed or it doesn't. I'm looking for a first role where I can keep learning
+            from people who have been doing this longer than I have.
+          </p>
+
+          <div class="skills">
+            <div><strong>Languages</strong> — C#, C++, Python, Dart</div>
+            <div><strong>Backend</strong> — ASP.NET Core, Clean Architecture, Docker</div>
+            <div><strong>Databases</strong> — SQL Server, PostgreSQL</div>
+            <div><strong>Also</strong> — HTML, CSS, JavaScript, Angular, Flutter</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= CONTACT ================= -->
+  <section id="contact">
+    <div class="wrap">
+      <p class="eyebrow">Contact</p>
+      <h2>Let's talk</h2>
+      <p class="contact-lead">
+        I'm open to junior backend roles and internships. The fastest way to see how I work is
+        the code itself.
+      </p>
+
+      <div class="links">
+        <div>Email — <a href="mailto:suana.mesic@edu.fit.ba">suana.mesic@edu.fit.ba</a></div>
+        <div>GitHub — <a href="https://github.com/suana-mesic">@suana-mesic</a></div>
+        <div>CodeWars — <a href="https://www.codewars.com/users/suana">@suana</a></div>
+      </div>
+
+      <a class="btn" href="https://github.com/suana-mesic">Start with my GitHub →</a>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap">Suana Mešić — built with plain HTML and CSS, hosted on GitHub Pages.</div>
+</footer>
+
 </body>
 </html>
