@@ -26,7 +26,7 @@
   }
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
-  html { scroll-behavior: smooth; }
+  html { scroll-behavior: smooth; overflow-x: hidden; }
 
   body {
     background: var(--bg);
@@ -59,6 +59,7 @@
   /* ---- layout ---- */
   .wrap { max-width: var(--page); margin: 0 auto; padding: 0 1.5rem; }
   section { padding: 5rem 0; border-top: 1px solid var(--line); }
+  @media (max-width: 30rem) { section { padding: 3rem 0; } }
   section:first-of-type { border-top: 0; }
 
   /* ---- nav ---- */
@@ -80,8 +81,14 @@
   .wordmark span { color: var(--main); }
 
   .nav-links { display: flex; gap: 1.25rem; align-items: center; font-size: 0.9rem; }
-  .nav-links a { color: var(--text); text-decoration: none; }
+  .nav-links a { color: var(--text); text-decoration: none; padding: 0.5rem 0; }
   .nav-links a:not(.btn):hover { color: var(--accent); }
+
+  @media (max-width: 30rem) {
+    .nav-inner { flex-wrap: wrap; justify-content: center; gap: 0.5rem; }
+    .nav-links { gap: 0.75rem; font-size: 0.85rem; }
+    .nav-links .btn { padding: 0.5rem 0.8rem; font-size: 0.85rem; }
+  }
 
   /* ---- buttons ---- */
   .btn {
@@ -102,6 +109,7 @@
 
   /* ---- hero ---- */
   #hero { padding: 6rem 0 5rem; }
+  @media (max-width: 30rem) { #hero { padding: 3.5rem 0 3rem; } }
   #hero h1 { max-width: 22ch; }
   .hero-sub { margin-top: 1.25rem; font-size: 1.05rem; color: var(--muted); }
   .hero-cta { margin-top: 2rem; }
@@ -120,10 +128,10 @@
 
   figure { margin: 2.5rem 0; }
   figure img {
-    display: block; width: 100%; height: auto;
+    display: block; width: 100%; height: auto; max-height: 600px; object-fit: contain;
     border-radius: 8px; border: 1px solid var(--line);
   }
-  figcaption { margin-top: 0.6rem; font-size: 0.85rem; color: var(--muted); max-width: var(--measure); }
+  figcaption { margin-top: 0.6rem; font-size: 0.9rem; color: var(--muted); max-width: var(--measure); }
 
   .stack {
     display: flex; flex-wrap: wrap; gap: 0.5rem;
