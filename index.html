@@ -156,6 +156,40 @@
   .contact-lead { margin-top: 1rem; }
   .links { margin: 1.5rem 0 2rem; display: grid; gap: 0.5rem; font-size: 0.95rem; }
 
+  /* ---- code block ---- */
+  .code-block {
+    background: #1E1A1D;
+    border-radius: 8px;
+    overflow-x: auto;
+    border: 1px solid var(--line);
+  }
+  .code-header {
+    padding: 0.6rem 1rem;
+    font-size: 0.8rem;
+    color: #9A8A90;
+    border-bottom: 1px solid #2E2830;
+    font-family: 'Inter', sans-serif;
+  }
+  .code-block pre {
+    margin: 0;
+    padding: 1rem;
+  }
+  .code-block code {
+    font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+    font-size: 0.85rem;
+    line-height: 1.6;
+    color: #E8DFE3;
+  }
+  .code-block .kw { color: #C586C0; }
+  .code-block .tp { color: #4EC9B0; }
+  .code-block .fn { color: #DCDCAA; }
+  .code-block .st { color: #CE9178; }
+  .code-block .cm { color: #6A9955; font-style: italic; }
+
+  @media (max-width: 30rem) {
+    .code-block code { font-size: 0.75rem; }
+  }
+
   footer { padding: 2.5rem 0; border-top: 1px solid var(--line); font-size: 0.85rem; color: var(--muted); }
 
   /* ---- accessibility floor ---- */
@@ -248,7 +282,52 @@
       </div>
 
       <figure>
-        <img src="bookverse-code.png" alt="The PaidOrderNotificationBackgroundService class in C#, showing the queue loop and per-notification error handling.">
+        <div class="code-block">
+          <div class="code-header">PaidOrderNotificationBackgroundService.cs</div>
+<pre><code><span class="kw">using</span> BookVerse.Application.Common.Interfaces;
+<span class="kw">namespace</span> BookVerse.API.BackgroundServices
+{
+    <span class="kw">public class</span> <span class="tp">PaidOrderNotificationBackgroundService</span>(
+        <span class="tp">IPaidOrderNotificationQueue</span> queue,
+        <span class="tp">IServiceProvider</span> serviceProvider,
+        <span class="tp">ILogger</span>&lt;<span class="tp">PaidOrderNotificationBackgroundService</span>&gt; logger) : <span class="tp">BackgroundService</span>
+    {
+        <span class="kw">protected override async</span> <span class="tp">Task</span> <span class="fn">ExecuteAsync</span>(<span class="tp">CancellationToken</span> stoppingToken)
+        {
+            <span class="kw">await foreach</span> (<span class="kw">var</span> notification <span class="kw">in</span> queue.DequeueAllAsync(stoppingToken))
+            {
+                <span class="kw">try</span>
+                {
+                    <span class="cm">// IOrderNotificationService is scoped (it depends on SignalR hub</span>
+                    <span class="cm">// contexts), so we resolve it per notification rather than capturing</span>
+                    <span class="cm">// a singleton instance at construction time.</span>
+                    <span class="kw">using var</span> scope = serviceProvider.CreateScope();
+                    <span class="kw">var</span> notificationService = scope.ServiceProvider
+                        .GetRequiredService&lt;<span class="tp">IOrderNotificationService</span>&gt;();
+                    <span class="kw">await</span> notificationService.NotifyNewPaidOrderAsync(
+                        notification.OrderId,
+                        notification.OrderNumber,
+                        notification.CustomerName,
+                        stoppingToken);
+                }
+                <span class="kw">catch</span> (<span class="tp">OperationCanceledException</span>) <span class="kw">when</span> (stoppingToken.IsCancellationRequested)
+                {
+                    <span class="cm">// Host is shutting down, exit cleanly.</span>
+                    <span class="kw">break</span>;
+                }
+                <span class="kw">catch</span> (<span class="tp">Exception</span> ex)
+                {
+                    <span class="cm">// One notification failing must not stop the loop;</span>
+                    <span class="cm">// log and continue with the next item.</span>
+                    logger.LogError(ex,
+                        <span class="st">"Failed to deliver paid-order notification for order {OrderId}"</span>,
+                        notification.OrderId);
+                }
+            }
+        }
+    }
+}</code></pre>
+        </div>
         <figcaption>
           The background service that drains the queue. The try/catch sits inside the loop on
           purpose — one failed notification must not stop the others.
@@ -283,9 +362,9 @@
             probably don't understand it yet.
           </p>
           <p>
-            What I like about backend work is that it's checkable. A payment either stays
-            committed or it doesn't. I'm looking for a first role where I can keep learning
-            from people who have been doing this longer than I have.
+            What I like about backend work is that it's checkable — either the system handles
+            a failure correctly or it doesn't. I'm looking for a first role where I can keep
+            learning from people who have been doing this longer than I have.
           </p>
 
           <div class="skills">
@@ -320,7 +399,7 @@
 
       <a class="btn" href="https://calendly.com/mesicsuanaa/30min">Book a 30-min call →</a>
 
-      <form action="https://formspree.io/f/mojgerkq" method="POST" style="margin-top:2.5rem; max-width:28rem;">
+      <form id="contact-form" action="https://formspree.io/f/mojgerkq" method="POST" style="margin-top:2.5rem; max-width:28rem;">
         <label style="display:block; margin-bottom:1rem;">
           <span style="font-size:0.9rem; font-weight:500;">Name</span><br>
           <input type="text" name="name" required
@@ -340,7 +419,40 @@
                 style="background:var(--main); color:#fff; border:none; padding:0.7rem 1.5rem; border-radius:6px; font-size:0.9rem; font-weight:500; cursor:pointer; font-family:inherit;">
           Send message →
         </button>
+        <p id="form-status" style="margin-top:1rem; font-size:0.9rem;"></p>
       </form>
+
+      <script>
+        document.getElementById('contact-form').addEventListener('submit', function(e) {
+          e.preventDefault();
+          var form = this;
+          var status = document.getElementById('form-status');
+          var btn = form.querySelector('button[type="submit"]');
+          btn.disabled = true;
+          btn.textContent = 'Sending...';
+          fetch(form.action, {
+            method: 'POST',
+            body: new FormData(form),
+            headers: { 'Accept': 'application/json' }
+          }).then(function(r) {
+            if (r.ok) {
+              form.reset();
+              status.textContent = 'Thank you! Your message has been sent.';
+              status.style.color = 'var(--main)';
+            } else {
+              status.textContent = 'Something went wrong. Please try again.';
+              status.style.color = '#c0392b';
+            }
+            btn.disabled = false;
+            btn.textContent = 'Send message →';
+          }).catch(function() {
+            status.textContent = 'Network error. Please try again.';
+            status.style.color = '#c0392b';
+            btn.disabled = false;
+            btn.textContent = 'Send message →';
+          });
+        });
+      </script>
     </div>
   </section>
 
