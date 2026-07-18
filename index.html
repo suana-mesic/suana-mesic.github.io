@@ -6,6 +6,16 @@
 <title>Suana Mešić — Backend Developer</title>
 <meta name="description" content="Junior backend developer. I turn messy requirements into clean, reliable backend code.">
 
+<meta property="og:title" content="Suana Mešić — Backend Developer">
+<meta property="og:description" content="Junior backend developer. I turn messy requirements into clean, reliable backend code.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://suana-mesic.github.io">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Suana Mešić — Backend Developer">
+<meta name="twitter:description" content="Junior backend developer. I turn messy requirements into clean, reliable backend code.">
+
+<link rel="icon" href="favicon.ico" type="image/x-icon">
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
@@ -428,6 +438,7 @@
           var form = this;
           var status = document.getElementById('form-status');
           var btn = form.querySelector('button[type="submit"]');
+          if (btn.disabled) return;
           btn.disabled = true;
           btn.textContent = 'Sending...';
           fetch(form.action, {
